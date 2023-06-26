@@ -1,0 +1,61 @@
+openapi: 3.0.0
+info:
+  title: Secure API
+  version: 1.0.0
+paths:
+  /myResourcePath:
+    get:
+      summary: Secure API endpoint
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: requestId
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ip:
+                    type: string
+                    format: ipv4
+                  requestTime:
+                    type: string
+                    format: date-time
+                  httpMethod:
+                    type: string
+                  resourcePath:
+                    type: string
+                  status:
+                    type: string
+                  protocol:
+                    type: string
+                  responseLength:
+                    type: string
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+  schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
